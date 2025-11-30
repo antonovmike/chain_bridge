@@ -1,0 +1,68 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: changeme
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: ../services/backend
+      dockerfile: Dockerfile
+    env_file:
+      - ../.env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - PORT=${PORT_BACKEND}
+    ports:
+      - "${PORT_BACKEND:-4000}:4000"
+    depends_on:
+      - postgres
+      - redis
+
+  frontend:
+    build:
+      context: ../services/frontend
+      dockerfile: Dockerfile
+    env_file:
+      - ../.env
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  bot:
+    build:
+      context: ../services/bot
+      dockerfile: Dockerfile
+    env_file:
+      - ../.env
+    depends_on:
+      - backend
+
+  chain:
+    build:
+      context: ../services/chain
+      dockerfile: Dockerfile
+    env_file:
+      - ../.env
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  db-data:
