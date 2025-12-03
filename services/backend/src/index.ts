@@ -71,3 +71,6 @@ app.get("/chain/tx/:id", (req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`Backend listening on port ${PORT}`);
 });
+
+// Export app for testing
+export default app;

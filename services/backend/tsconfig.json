@@ -8,13 +8,15 @@
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "allowJs": true,
     "skipLibCheck": true,
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "sourceMap": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["node"]
+    "types": ["node", "jest"],
+    "isolatedModules": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts"]
